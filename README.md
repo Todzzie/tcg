@@ -1,46 +1,77 @@
-# Project Overview
+# TCG Vault — Collector Inventory & Price Tracking
 
-## TCG (Trading Card Game)
+## Vision
+TCG Vault is a web app for collectors and shop owners to catalog and price-check trading cards across major games:
+- Pokémon
+- Yu-Gi-Oh!
+- Magic: The Gathering
 
-The TCG project aims to provide a digital platform for creating, playing, and managing trading card games. This platform allows users to design their own games, organize tournaments, and engage with a community of players. The application is built with a focus on scalability, user experience, and extensibility.
+Users can add cards three ways:
+1. **Scan with camera** (OCR + card recognition)
+2. **Upload card photos**
+3. **Manual entry** (name/set/number/condition/variant)
 
-## Key Features
-- User Account Management  
-- Game Design Interface  
-- Tournaments and Leaderboards  
-- Real-time Game Play  
-- Community Engagement Tools  
+The goal is to make collection management simple while surfacing near-real-time market signals from sold listings and trusted marketplaces.
 
----
+## Core Product Outcomes
+- Know exactly what cards you own and where they are stored.
+- Organize by **game → set → card** with quantities, condition, and language/printing details.
+- View latest sold comps (e.g., last 3 sold eBay listings).
+- Compare pricing across TCGPlayer and Card Kingdom.
+- Support both individual collectors and small card shops.
 
-# Architecture Documentation
+## MVP Features
 
-## System Architecture
+### 1) Account + Collection Management
+- User authentication and profiles
+- Create multiple collections (Personal, Store Inventory, Trade Binder)
+- Card-level inventory fields:
+  - Game, set, card number, card name
+  - Variant (holo/reverse/1st edition/alt art)
+  - Condition, language, grading info
+  - Quantity and storage location (binder/box/shelf)
 
-The TCG project employs a microservices architecture, allowing for improved scalability and maintainability. Each service is responsible for a specific function within the platform.
+### 2) Card Intake (Scan/Photo/Manual)
+- Mobile camera flow for scanning cards
+- Image upload with asynchronous recognition pipeline
+- Manual fallback form with autosuggest for card metadata
 
-### Components
-1. **User Service**  
-   Handles user authentication and profile management.
+### 3) Price & Sold Listing Insights
+- Show **last three sold eBay listings** with:
+  - title, sold price, sold date, shipping, listing URL
+- Show marketplace snapshots from:
+  - TCGPlayer
+  - Card Kingdom
+- Normalize and cache prices by card + variant + condition mapping
 
-2. **Game Service**  
-   Manages game creation, editing, and gameplay mechanics.
+### 4) Search, Filters, and Views
+- Global search by game, set, card name, number
+- Filters for condition, quantity, value bands, and duplicates
+- Set-level completion view (owned vs total in set)
 
-3. **Tournament Service**  
-   Organizes tournaments and maintains leaderboards.
+## Future Enhancements
+- Trade matching between users
+- Portfolio analytics (value trends over time)
+- Alerts for price drops/spikes
+- Bulk import/export (CSV, scanner integrations)
+- POS-lite tools for shop inventory management
 
-4. **Notification Service**  
-   Sends notifications to users regarding game events, tournament updates, and community interactions.
+## Suggested Tech Stack
+- **Frontend:** Next.js + TypeScript + Tailwind
+- **Backend:** Node.js (NestJS or Express) + TypeScript
+- **Database:** PostgreSQL
+- **Queue/Jobs:** Redis + BullMQ
+- **Storage:** S3-compatible object storage for images
+- **Search:** PostgreSQL full-text (MVP), optional Elasticsearch later
+- **Observability:** OpenTelemetry + structured logging
 
-### Technologies Used
-- **Frontend:** React.js, Redux  
-- **Backend:** Node.js, Express, MongoDB  
-- **Deployment:** Docker, Kubernetes  
+## Non-Functional Requirements
+- Fast card search (<300ms for common queries)
+- Price refresh jobs with source-aware rate limiting
+- Idempotent card ingestion pipeline
+- Clear audit trail for pricing snapshots
+- Privacy-first handling of user-uploaded media
 
-## Data Flow
-
-The data flow between the services is managed through RESTful APIs, allowing for seamless communication and integration. Each service can be independently scaled based on the load and is designed to handle specific terminologies relevant to trading card games.
-
----
-
-For more detailed information, please refer to the respective service documentation located in the docs folder of the repository.
+## Repository Contents
+- `README.md` — product vision and MVP plan
+- `ARCHITECTURE.md` — proposed system design, schema, APIs, and workflows
